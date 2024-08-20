@@ -182,6 +182,7 @@ impl ConstraintLike for AngleBetweenPoints {
 #[cfg(test)]
 mod tests {
 
+    use std::error::Error;
     use std::{cell::RefCell, rc::Rc};
 
     use crate::constraints::ConstraintCell;
@@ -241,31 +242,12 @@ mod tests {
     }
 
     #[test]
-    fn test_specific_case() {
+    fn test_specific_case() -> Result<(), Box<dyn Error>> {
         let mut sketch = Sketch::new();
 
-        let point_a = Rc::new(RefCell::new(Point2::new(
-            0.7805516932908316,
-            -0.00782612334736288,
-        )));
-        let point_b = Rc::new(RefCell::new(Point2::new(
-            1.22103191002294,
-            0.004601914768224987,
-        )));
-        let point_middle = Rc::new(RefCell::new(Point2::new(
-            0.013589691730458502,
-            -0.10039941813640837,
-        )));
-
-        sketch
-            .add_primitive(PrimitiveCell::Point2(point_a.clone()))
-            .unwrap();
-        sketch
-            .add_primitive(PrimitiveCell::Point2(point_b.clone()))
-            .unwrap();
-        sketch
-            .add_primitive(PrimitiveCell::Point2(point_middle.clone()))
-            .unwrap();
+        let point_a = sketch.add_point2(0.7805516932908316, -0.00782612334736288)?;
+        let point_b = sketch.add_point2(1.22103191002294, 0.004601914768224987)?;
+        let point_middle = sketch.add_point2(0.013589691730458502, -0.10039941813640837)?;
 
         let constr1 = Rc::new(RefCell::new(AngleBetweenPoints::new(
             point_a.clone(),
@@ -291,5 +273,6 @@ mod tests {
         );
 
         assert!(constr1.borrow().loss_value() < 0.001,);
+        Ok(())
     }
 }

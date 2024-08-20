@@ -122,7 +122,6 @@ impl Solver for BFGSSolver {
 #[cfg(test)]
 mod tests {
     use std::error::Error;
-    use std::ops::DerefMut;
 
     use crate::{
         examples::test_rectangle_rotated::RotatedRectangleDemo,
@@ -131,15 +130,13 @@ mod tests {
 
     #[test]
     pub fn test_bfgs_solver() -> Result<(), Box<dyn Error>> {
-        let rectangle = RotatedRectangleDemo::new();
+        let mut rectangle = RotatedRectangleDemo::new()?;
 
         // Now solve the sketch
         let solver = BFGSSolver::new();
-        solver
-            .solve(rectangle.sketch.borrow_mut().deref_mut())
-            .unwrap();
+        solver.solve(&mut rectangle.sketch).unwrap();
 
-        println!("loss: {:?}", rectangle.sketch.borrow_mut().get_loss());
+        println!("loss: {:?}", rectangle.sketch.get_loss());
         println!("point_a: {:?}", rectangle.point_a.as_ref().borrow());
         println!("point_b: {:?}", rectangle.point_b.as_ref().borrow());
         println!("point_c: {:?}", rectangle.point_c.as_ref().borrow());

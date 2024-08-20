@@ -77,7 +77,6 @@ mod tests {
 
     use crate::{
         constraints::{fix_point::FixPoint, ConstraintCell, ConstraintLike},
-        primitives::{point2::Point2, PrimitiveCell},
         sketch::Sketch,
         solvers::{gradient_based_solver::GradientBasedSolver, Solver},
     };
@@ -86,10 +85,7 @@ mod tests {
     fn test_fix_point() {
         let mut sketch = Sketch::new();
 
-        let point = Rc::new(RefCell::new(Point2::new(1.0, 0.0)));
-        sketch
-            .add_primitive(PrimitiveCell::Point2(point.clone()))
-            .unwrap();
+        let point = sketch.add_point2(1.0, 0.0).unwrap();
 
         let constr1 = Rc::new(RefCell::new(FixPoint::new(
             point.clone(),

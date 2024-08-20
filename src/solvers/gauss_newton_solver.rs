@@ -66,7 +66,6 @@ impl Solver for GaussNewtonSolver {
 #[cfg(test)]
 mod tests {
     use std::error::Error;
-    use std::ops::DerefMut;
 
     use crate::{
         examples::test_rectangle_rotated::RotatedRectangleDemo,
@@ -75,15 +74,13 @@ mod tests {
 
     #[test]
     pub fn test_gauss_newton_solver() -> Result<(), Box<dyn Error>> {
-        let rectangle = RotatedRectangleDemo::new();
+        let mut rectangle = RotatedRectangleDemo::new()?;
 
         // Now solve the sketch
         let solver = GaussNewtonSolver::new_with_params(500, 1e-8, 1e0);
-        solver
-            .solve(rectangle.sketch.borrow_mut().deref_mut())
-            .unwrap();
+        solver.solve(&mut rectangle.sketch).unwrap();
 
-        println!("loss: {:?}", rectangle.sketch.borrow_mut().get_loss());
+        println!("loss: {:?}", rectangle.sketch.get_loss());
         println!("point_a: {:?}", rectangle.point_a.as_ref());
         println!("point_b: {:?}", rectangle.point_b.as_ref());
         println!("point_c: {:?}", rectangle.point_c.as_ref());

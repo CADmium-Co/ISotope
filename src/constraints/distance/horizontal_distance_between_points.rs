@@ -127,7 +127,6 @@ mod tests {
             distance::horizontal_distance_between_points::HorizontalDistanceBetweenPoints,
             ConstraintCell, ConstraintLike,
         },
-        primitives::{point2::Point2, PrimitiveCell},
         sketch::Sketch,
         solvers::{gradient_based_solver::GradientBasedSolver, Solver},
     };
@@ -136,14 +135,8 @@ mod tests {
     fn test_horizontal_distance_between_points() {
         let mut sketch = Sketch::new();
 
-        let point_a = Rc::new(RefCell::new(Point2::new(1.0, 0.0)));
-        let point_b = Rc::new(RefCell::new(Point2::new(0.0, 1.0)));
-        sketch
-            .add_primitive(PrimitiveCell::Point2(point_a.clone()))
-            .unwrap();
-        sketch
-            .add_primitive(PrimitiveCell::Point2(point_b.clone()))
-            .unwrap();
+        let point_a = sketch.add_point2(1.0, 0.0).unwrap();
+        let point_b = sketch.add_point2(0.0, 1.0).unwrap();
 
         let constr1 = Rc::new(RefCell::new(HorizontalDistanceBetweenPoints::new(
             point_a.clone(),
